@@ -1,4 +1,5 @@
-import { renderWatched, watchList, queueList } from '../library';
+import { watchList, queueList } from '../library';
+import { renderLibraryList } from './renderLibraryList';
 const libraryWatchedBtn = document.querySelector('.library__watched-btn');
 const libraryQueueBtn = document.querySelector('.library__queue-btn');
 
@@ -15,7 +16,7 @@ function onLibraryBtnsClick(evt) {
     libraryWatchedBtn.classList.add('is-active');
     libraryQueueBtn.classList.remove('is-active');
     if (evt.target.classList.contains('is-active')) {
-      renderWatched(watchList);
+      renderLibraryList(watchList);
     }
     return;
   }
@@ -23,6 +24,9 @@ function onLibraryBtnsClick(evt) {
   if (evt.target.classList.contains('library__queue-btn')) {
     libraryWatchedBtn.classList.remove('is-active');
     libraryQueueBtn.classList.add('is-active');
+    if (evt.target.classList.contains('is-active')) {
+      renderLibraryList(queueList);
+    }
     return;
   }
 }
