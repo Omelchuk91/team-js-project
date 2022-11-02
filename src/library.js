@@ -15,6 +15,7 @@ import {
 } from './js/auth/auth-nav';
 import { insertData, readData } from './js/firebase/db-service';
 import './js/onLibraryBtnsClick';
+import { renderLibraryList } from './js/renderLibraryList';
 
 renderNav('library');
 
@@ -33,10 +34,7 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-import { showInfoModal } from './js/model-info-film';
-import { renderLibraryList } from './js/renderLibraryList';
-
-export const watchList = [];
+export const watchList = [724495, 436270, 944864];
 export const queueList = [436270, 944864, 724495];
 
 window.addEventListener('load', renderLibraryList(watchList));

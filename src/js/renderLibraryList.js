@@ -1,5 +1,7 @@
 import MovieApiService from './movie-service';
 import genre from '../genres.json';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { showInfoModal } from './model-info-film';
 
 const api = new MovieApiService();
 const cardList = document.querySelector('.js-films-list-library');
@@ -8,7 +10,10 @@ const infoModal = document.querySelector('.modal-holder');
 export function renderLibraryList(list) {
   const movies = list.map(api.getMovieInfo);
   if (movies.length === 0) {
-    return alert('Список переглянутих фільмів порожній :(');
+    Notify.info('Sorry, the movie list is empty :(', {
+      timeout: 6000,
+    });
+    return (cardList.innerHTML = []);
   } else {
     return Promise.all(movies)
       .then(array => {
@@ -56,14 +61,14 @@ export function renderLibraryList(list) {
       .join('');
     cardList.innerHTML = newMarkup;
 
-    // cardList.addEventListener('click', event => {
-    //   const card = event.target.closest('li');
-    //   if (card) {
-    //     const cardId = card.getAttribute('data-id');
-    //     showInfoModal(infoModal, api, cardId);
-    //   }
-    // });
-  }
+  //   cardList.addEventListener('click', event => {
+  //     const card = event.target.closest('li');
+  //     if (card) {
+  //       const cardId = card.getAttribute('data-id');
+  //       showInfoModal(infoModal, api, cardId);
+  //     }
+  //   });
+  // }
 
   function fetchFilmPhoto(posterPath) {
     const noPosterAvaliable =
