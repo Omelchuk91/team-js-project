@@ -5,7 +5,6 @@ import { showInfoModal } from './model-info-film';
 
 const api = new MovieApiService();
 const cardList = document.querySelector('.js-films-list-library');
-const infoModal = document.querySelector('.modal-holder');
 
 export function renderLibraryList(list) {
   const movies = list.map(api.getMovieInfo);
@@ -61,14 +60,14 @@ export function renderLibraryList(list) {
       .join('');
     cardList.innerHTML = newMarkup;
 
-  //   cardList.addEventListener('click', event => {
-  //     const card = event.target.closest('li');
-  //     if (card) {
-  //       const cardId = card.getAttribute('data-id');
-  //       showInfoModal(infoModal, api, cardId);
-  //     }
-  //   });
-  // }
+    cardList.addEventListener('click', event => {
+      const card = event.target.closest('li');
+      if (card) {
+        const cardId = card.getAttribute('data-id');
+        showInfoModal(api, cardId);
+      }
+    });
+  }
 
   function fetchFilmPhoto(posterPath) {
     const noPosterAvaliable =
