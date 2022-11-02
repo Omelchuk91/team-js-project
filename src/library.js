@@ -14,6 +14,9 @@ import {
   addLogOutButton,
 } from './js/auth/auth-nav';
 import { insertData, readData } from './js/firebase/db-service';
+import './js/library-watched';
+import './js/onLibraryBtnsClick';
+import './js/onButtonClick';
 
 renderNav('library');
 
