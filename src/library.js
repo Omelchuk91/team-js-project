@@ -14,6 +14,7 @@ import {
   addLogOutButton,
 } from './js/auth/auth-nav';
 import { insertData, readData } from './js/firebase/db-service';
+import './js/onLibraryBtnsClick';
 
 renderNav('library');
 
@@ -36,22 +37,27 @@ import MovieApiService from './js/movie-service';
 import genre from './genres.json';
 import { showInfoModal } from './js/model-info-film';
 
-const api = new MovieApiService()
+const api = new MovieApiService();
 
-const cardList = document.querySelector('.js-films-list-library')
-const infoModal = document.querySelector('.modal-holder')
+const cardList = document.querySelector('.js-films-list-library');
+const infoModal = document.querySelector('.modal-holder');
 
+const watchList = [49046, 913290, 766475];
+const queueList = [436270, 944864, 724495];
 
-const watchlist = [49046, 913290, 766475];
-const movies = watchlist.map(api.getMovieInfo);
-Promise.all(movies)
-  .then((array) => {
-    createFilmCardMarkup(array);
-  })
-  .catch(console.log);
+renderWatched();
+
+function renderWatched() {
+  const movies = watchList.map(api.getMovieInfo);
+  Promise.all(movies)
+    .then(array => {
+      createFilmCardMarkup(array);
+    })
+    .catch(console.log);
+}
 
 function createFilmCardMarkup(films) {
-  console.log(films)
+  console.log(films);
   const newMarkup = films
     .map(film => {
       const {
@@ -62,8 +68,7 @@ function createFilmCardMarkup(films) {
         genres,
         id,
       } = film;
-      const fIlmIds = genres.map(genre => genre.id
-      )
+      const fIlmIds = genres.map(genre => genre.id);
       const year = new Date(release_date).getFullYear();
       return `<li data-id="${id}" class="card film-card">
                         <div class="film-card__img-wrap">
@@ -79,11 +84,11 @@ function createFilmCardMarkup(films) {
                             <h2 class="film-card__title">${original_title}</h2>
                             <div class="film-card__wrapper">
                                 <span class="film-card__info">${getGenres(
-        fIlmIds
-      ).join(', ')} | ${year}</span>
+                                  fIlmIds
+                                ).join(', ')} | ${year}</span>
                                 <span data-film-rating class="film-card__rating">${vote_average.toFixed(
-        2
-      )}</span>
+                                  2
+                                )}</span>
                             </div>
                         </div>
                     </li>`;
