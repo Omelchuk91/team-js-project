@@ -42,35 +42,36 @@ const api = new MovieApiService();
 const cardList = document.querySelector('.js-films-list-library');
 const infoModal = document.querySelector('.modal-holder');
 
-const watchList = [49046, 913290, 766475];
-const queueList = [436270, 944864, 724495];
+export const watchList = [];
+export const queueList = [436270, 944864, 724495];
 
-renderWatched();
+export function renderWatched(list) {
+  const movies = list.map(api.getMovieInfo);
+  if (movies === '') {
+    alert('Список переглянутих фільмів порожній :(');
+  } else {
+    Promise.all(movies)
+      .then(array => {
+        createFilmCardMarkup(array);
+      })
+      .catch(console.log);
+  }
 
-function renderWatched() {
-  const movies = watchList.map(api.getMovieInfo);
-  Promise.all(movies)
-    .then(array => {
-      createFilmCardMarkup(array);
-    })
-    .catch(console.log);
-}
-
-function createFilmCardMarkup(films) {
-  console.log(films);
-  const newMarkup = films
-    .map(film => {
-      const {
-        original_title,
-        poster_path,
-        vote_average,
-        release_date,
-        genres,
-        id,
-      } = film;
-      const fIlmIds = genres.map(genre => genre.id);
-      const year = new Date(release_date).getFullYear();
-      return `<li data-id="${id}" class="card film-card">
+  function createFilmCardMarkup(films) {
+    console.log(films);
+    const newMarkup = films
+      .map(film => {
+        const {
+          original_title,
+          poster_path,
+          vote_average,
+          release_date,
+          genres,
+          id,
+        } = film;
+        const fIlmIds = genres.map(genre => genre.id);
+        const year = new Date(release_date).getFullYear();
+        return `<li data-id="${id}" class="card film-card">
                         <div class="film-card__img-wrap">
                             <img
                                 class="film-card__img"
@@ -92,39 +93,40 @@ function createFilmCardMarkup(films) {
                             </div>
                         </div>
                     </li>`;
-    })
-    .join('');
-  cardList.innerHTML = newMarkup;
+      })
+      .join('');
+    cardList.innerHTML = newMarkup;
 
-  // cardList.addEventListener('click', event => {
-  //   const card = event.target.closest('li');
-  //   if (card) {
-  //     const cardId = card.getAttribute('data-id');
-  //     showInfoModal(infoModal, api, cardId);
-  //   }
-  // });
-}
-
-function fetchFilmPhoto(posterPath) {
-  const noPosterAvaliable =
-    'https://www.reelviews.net/resources/img/default_poster.jpg';
-
-  return posterPath
-    ? `https://image.tmdb.org/t/p/w500${posterPath}`
-    : noPosterAvaliable;
-}
-
-function getGenres(ids) {
-  let newArray = [];
-  for (let i = 0; i < ids.length; i += 1) {
-    genre.genres.find(({ id, name }) => {
-      if (id === ids[i]) {
-        newArray.push(name);
-      }
-    });
+    // cardList.addEventListener('click', event => {
+    //   const card = event.target.closest('li');
+    //   if (card) {
+    //     const cardId = card.getAttribute('data-id');
+    //     showInfoModal(infoModal, api, cardId);
+    //   }
+    // });
   }
-  if (newArray.length > 2) {
-    newArray.splice(2, 3, 'Other');
+
+  function fetchFilmPhoto(posterPath) {
+    const noPosterAvaliable =
+      'https://www.reelviews.net/resources/img/default_poster.jpg';
+
+    return posterPath
+      ? `https://image.tmdb.org/t/p/w500${posterPath}`
+      : noPosterAvaliable;
   }
-  return newArray;
+
+  function getGenres(ids) {
+    let newArray = [];
+    for (let i = 0; i < ids.length; i += 1) {
+      genre.genres.find(({ id, name }) => {
+        if (id === ids[i]) {
+          newArray.push(name);
+        }
+      });
+    }
+    if (newArray.length > 2) {
+      newArray.splice(2, 3, 'Other');
+    }
+    return newArray;
+  }
 }
